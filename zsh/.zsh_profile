@@ -1,0 +1,6 @@
+export PYTHONDONTWRITEBYTECODE=1
+export XDG_CONFIG_HOME=$HOME/.config
+VIM="nvim"
+
+alias ll = ls -la
+
