@@ -4,6 +4,6 @@ VIM="nvim"
 
 alias ll="ls -la"
 
-path+=("~/.local/scripts")
+path+=("$HOME/.local/scripts/")
 export PATH
 
