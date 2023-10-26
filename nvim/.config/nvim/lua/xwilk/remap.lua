@@ -22,3 +22,7 @@ vim.keymap.set("v", "<leader>d", "\"_d")
 
 -- make file executable 
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", {silent = true})
+
+-- open project in tmux session
+vim.keymap.set("n", "<C-f>", "<cmd>!tmux neww tmux-sessionizer<CR>", {silent = true})
+
