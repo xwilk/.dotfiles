@@ -4,6 +4,8 @@ VIM="nvim"
 
 alias ll="ls -la"
 
+bindkey -s ^f "tmux-sessionizer\n"
+
 path+=("$HOME/.local/scripts/")
 export PATH
 
