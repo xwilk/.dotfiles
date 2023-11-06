@@ -1,0 +1,29 @@
+font:
+  normal:
+    family: JetBrains Mono
+    style: Thin
+
+  bold:
+    family: JetBrains Mono
+    style: Bold
+
+  italic:
+    family: JetBrains Mono
+    style: Italic
+
+  bold_italic:
+    family: JetBrains Mono
+    style: Bold Italic
+
+  size: 14
+
+mouse:
+  url:
+    launcher:
+      # This depends on your OS, on Mac it’s `open`
+      program: open
+    modifiers: Command
+
+import:
+ - ~/.config/alacritty/themes/themes/flexoki.yaml
+
