@@ -20,9 +20,11 @@ vim.keymap.set("n", "<leader>Y", "\"+Y")
 vim.keymap.set("n", "<leader>d", "\"_d")
 vim.keymap.set("v", "<leader>d", "\"_d")
 
--- make file executable 
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", {silent = true})
+-- make file executable
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- open project in tmux session
-vim.keymap.set("n", "<C-f>", "<cmd>!tmux neww tmux-sessionizer<CR>", {silent = true})
+vim.keymap.set("n", "<C-f>", "<cmd>!tmux neww tmux-sessionizer<CR>", { silent = true })
 
+-- run rustfmt
+-- vim.keymap.set("n", "<leader>ff", "<cmd>!cargo fmt -q <CR> :edit <CR>", { silent = true })
