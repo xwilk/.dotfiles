@@ -17,13 +17,6 @@ font:
 
   size: 14
 
-mouse:
-  url:
-    launcher:
-      # This depends on your OS, on Mac it’s `open`
-      program: open
-    modifiers: Command
-
 import:
- - ~/.config/alacritty/themes/themes/flexoki.yaml
+ - ~/.config/alacritty/themes/themes/city_lights.yaml
 
