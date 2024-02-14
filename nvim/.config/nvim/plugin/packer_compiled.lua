@@ -49,8 +49,8 @@ local function save_profiles(threshold)
 end
 
 time([[Luarocks path setup]], true)
-local package_path_str = "/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1697887905/share/lua/5.1/?.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1697887905/share/lua/5.1/?/init.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1697887905/lib/luarocks/rocks-5.1/?.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1697887905/lib/luarocks/rocks-5.1/?/init.lua"
-local install_cpath_pattern = "/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1697887905/lib/lua/5.1/?.so"
+local package_path_str = "/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1703358377/share/lua/5.1/?/init.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?.lua;/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1703358377/lib/luarocks/rocks-5.1/?/init.lua"
+local install_cpath_pattern = "/Users/pwilk/.cache/nvim/packer_hererocks/2.1.1703358377/lib/lua/5.1/?.so"
 if not string.find(package.path, package_path_str, 1, true) then
   package.path = package.path .. ';' .. package_path_str
 end
@@ -79,10 +79,35 @@ _G.packer_plugins = {
     path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
+  ["cmp-buffer"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-buffer",
+    url = "https://github.com/hrsh7th/cmp-buffer"
+  },
   ["cmp-nvim-lsp"] = {
     loaded = true,
     path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
     url = "https://github.com/hrsh7th/cmp-nvim-lsp"
+  },
+  ["cmp-nvim-lsp-signature-help"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp-signature-help",
+    url = "https://github.com/hrsh7th/cmp-nvim-lsp-signature-help"
+  },
+  ["cmp-nvim-lua"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-nvim-lua",
+    url = "https://github.com/hrsh7th/cmp-nvim-lua"
+  },
+  ["cmp-path"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-path",
+    url = "https://github.com/hrsh7th/cmp-path"
+  },
+  ["cmp-vsnip"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
+    url = "https://github.com/hrsh7th/cmp-vsnip"
   },
   darcula = {
     config = { "\27LJ\2\n7\0\0\3\0\3\0\0056\0\0\0009\0\1\0'\2\2\0B\0\2\1K\0\1\0\24colorscheme darcula\bcmd\bvim\0" },
@@ -112,7 +137,7 @@ _G.packer_plugins = {
   },
   ["null-ls.nvim"] = {
     loaded = true,
-    path = "/home/xwilk/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
     url = "https://github.com/jose-elias-alvarez/null-ls.nvim"
   },
   ["nvim-cmp"] = {
@@ -160,10 +185,20 @@ _G.packer_plugins = {
     path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/undotree",
     url = "https://github.com/mbbill/undotree"
   },
+  ["vim-floaterm"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/vim-floaterm",
+    url = "https://github.com/voldikss/vim-floaterm"
+  },
   ["vim-fugitive"] = {
     loaded = true,
     path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
+  },
+  ["vim-vsnip"] = {
+    loaded = true,
+    path = "/Users/pwilk/.local/share/nvim/site/pack/packer/start/vim-vsnip",
+    url = "https://github.com/hrsh7th/vim-vsnip"
   }
 }
 

@@ -25,12 +25,15 @@ nls.setup({
         fmt.trim_whitespace.with({
             filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux' },
         }),
+        fmt.isort,
         fmt.rustfmt,
         fmt.stylua,
         fmt.shfmt.with({
             extra_args = { '-i', 4, '-ci', '-sr' },
         }),
         -- # DIAGNOSTICS #
+        dgn.pylint,
+        dgn.mypy,
         dgn.shellcheck,
         dgn.luacheck.with({
             extra_args = { '--globals', 'vim', '--std', 'luajit' },

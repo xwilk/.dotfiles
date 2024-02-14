@@ -15,8 +15,8 @@ font:
     family: JetBrains Mono
     style: Bold Italic
 
-  size: 14
+  size: 17
 
 import:
- - ~/.config/alacritty/themes/themes/city_lights.yaml
+ - ~/.config/alacritty/themes/themes/github_dark.yaml
 
