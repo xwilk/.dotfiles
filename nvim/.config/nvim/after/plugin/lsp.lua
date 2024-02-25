@@ -8,10 +8,37 @@ end)
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
-    handlers = {
-        lsp_zero.default_setup,
-    }
+    handlers = { lsp_zero.default_setup, },
+    ensure_installed = { "pylsp" },
 })
+require('lspconfig').pylsp.setup{
+    settings = {
+        pylsp = {
+            plugins = {
+                -- formatter options
+                black = { enabled = true },
+                autopep8 = { enabled = false },
+                flake8 = { enabled = false },
+                yapf = { enabled = false },
+                -- linter options
+                pylint = { enabled = true },
+                mypy = { enabled = true },
+                ruff = { enabled = false },
+                mccabe = { enabled = false },
+                pyflakes = { enabled = false },
+                pycodestyle = { enabled = false },
+                -- auto-completion options
+                jedi_completion = { fuzzy = true },
+                -- import sorting
+                isort = { enabled = true },
+                -- refactor
+                rope_autoimport = { enables = true },
+            }
+        }
+    }
+}
+
+
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }

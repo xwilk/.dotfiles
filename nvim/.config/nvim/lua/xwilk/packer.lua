@@ -27,11 +27,21 @@ return require('packer').startup(function(use)
             vim.cmd('colorscheme darcula')
         end
     })
+    
+    use({
+        "rebelot/kanagawa.nvim",
+        as = 'kanagawa',
+        config = function()
+            vim.cmd('colorscheme kanagawa')
+        end
+    })
 
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('aklt/plantuml-syntax')
     use('theprimeagen/harpoon')
     use('mbbill/undotree')
     use('tpope/vim-fugitive')
+    use('lewis6991/gitsigns.nvim')
 
     use {
         'VonHeikemen/lsp-zero.nvim',

@@ -23,8 +23,9 @@ nls.setup({
     sources = {
         -- # FORMATTING #
         fmt.trim_whitespace.with({
-            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux' },
+            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux', 'py' },
         }),
+        fmt.black,
         fmt.isort,
         fmt.rustfmt,
         fmt.stylua,
