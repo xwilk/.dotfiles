@@ -23,11 +23,12 @@ nls.setup({
     sources = {
         -- # FORMATTING #
         fmt.trim_whitespace.with({
-            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux', 'py' },
+            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux', 'py', 'go' },
         }),
         fmt.black,
         fmt.isort,
         fmt.rustfmt,
+        fmt.gofmt,
         fmt.stylua,
         fmt.shfmt.with({
             extra_args = { '-i', 4, '-ci', '-sr' },
