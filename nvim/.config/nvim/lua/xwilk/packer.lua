@@ -13,12 +13,17 @@ return require('packer').startup(function(use)
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
 
-    use({ 'jose-elias-alvarez/null-ls.nvim' })
+    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+    use('mbbill/undotree')
+    use('theprimeagen/harpoon')
+    use('terrortylor/nvim-comment')
 
+    -- Themes
     use({
         'rose-pine/neovim',
         as = 'rose-pine'
     })
+    use({'tpope/vim-vividchalk', as = 'vividchalk'})
 
     use({
         'doums/darcula',
@@ -36,13 +41,18 @@ return require('packer').startup(function(use)
         end
     })
 
-    use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-    use('aklt/plantuml-syntax')
-    use('theprimeagen/harpoon')
-    use('mbbill/undotree')
+    -- Git
     use('tpope/vim-fugitive')
     use('lewis6991/gitsigns.nvim')
 
+    -- Debugging
+    use('mfussenegger/nvim-dap')
+    use('mfussenegger/nvim-dap-python')
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap", "nvim-neotest/nvim-nio"} }
+    use('theHamsta/nvim-dap-virtual-text')
+    use('nvim-telescope/telescope-dap.nvim')
+
+    -- LSP
     use {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v3.x',
@@ -69,7 +79,12 @@ return require('packer').startup(function(use)
             { 'L3MON4D3/LuaSnip' },
         }
     }
+    
+    -- Copilot
+    use("github/copilot.vim")
 
     use('simrat39/rust-tools.nvim')
     use('voldikss/vim-floaterm')
+    use({ 'jose-elias-alvarez/null-ls.nvim' })
+    use('aklt/plantuml-syntax')
 end)

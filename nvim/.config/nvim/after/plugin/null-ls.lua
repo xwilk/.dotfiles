@@ -27,6 +27,7 @@ nls.setup({
         }),
         fmt.black,
         fmt.isort,
+        fmt.gofmt,
         fmt.rustfmt,
         fmt.gofmt,
         fmt.stylua,
@@ -45,3 +46,4 @@ nls.setup({
         fmt_on_save(client, bufnr)
     end,
 })
+

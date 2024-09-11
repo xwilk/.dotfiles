@@ -21,7 +21,7 @@ require('lspconfig').pylsp.setup{
                 flake8 = { enabled = false },
                 yapf = { enabled = false },
                 -- linter options
-                pylint = { enabled = true },
+                pylint = { enabled = false },
                 mypy = { enabled = true },
                 ruff = { enabled = false },
                 mccabe = { enabled = false },
@@ -38,8 +38,6 @@ require('lspconfig').pylsp.setup{
     }
 }
 
-
-
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
@@ -48,8 +46,6 @@ cmp.setup({
     mapping = cmp.mapping.preset.insert({
         ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
         ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-        ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<C-y>'] = cmp.mapping.confirm({ select = true }),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<CR>'] = cmp.mapping.confirm({
