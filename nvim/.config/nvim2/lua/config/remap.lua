@@ -34,7 +34,10 @@ vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>q", "<cmd>copen<CR>")
 vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
 
+-- copy path to clipboard
+vim.keymap.set("n", "<leader>cfp", ":let @+ = expand('%:p')<CR>")
+vim.keymap.set("n", "<leader>cp", ":let @+ = expand('%')<CR>")
+
 -- plugins
 vim.keymap.set("n", "-", "<cmd>Oil<CR>")
-vim.keymap.set('n', '<leader>gb', require("gitsigns").toggle_current_line_blame)
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
