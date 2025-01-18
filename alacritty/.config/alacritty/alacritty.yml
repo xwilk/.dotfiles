@@ -1,22 +1,22 @@
 font:
   normal:
-    family: JetBrains Mono
-    style: Thin
+    family: JetBrainsMono Nerd Font Mono
+    style: Light 
 
   bold:
-    family: JetBrains Mono
+    family: JetBrainsMono Nerd Font Mono
     style: Bold
 
   italic:
-    family: JetBrains Mono
+    family: JetBrainsMono Nerd Font Mono
     style: Italic
 
   bold_italic:
-    family: JetBrains Mono
+    family: JetBrainsMone Nerd Font Mono
     style: Bold Italic
 
   size: 17
 
 import:
- - ~/.config/alacritty/themes/themes/github_dark.yaml
+ - ~/.config/alacritty/themes/themes/kanagawa.yaml
 

@@ -17,12 +17,42 @@ return {
       },
     },
     config = function()
-      require("mason").setup({})
-      require("mason-lspconfig").setup()
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        automatic_installation = true,
+      })
 
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      require("lspconfig").lua_ls.setup({ capabilities = capabilities })
+      local lspconfig = require("lspconfig")
+      lspconfig.lua_ls.setup({ capabilities = capabilities })
+      lspconfig.pylsp.setup({
+        settings = {
+          pylsp = {
+            plugins = {
+              -- formatter options
+              black = { enabled = false },
+              autopep8 = { enabled = false },
+              flake8 = { enabled = false },
+              yapf = { enabled = false },
+              -- linter options
+              pylint = { enabled = true },
+              mypy = { enabled = true },
+              ruff = { enabled = false },
+              mccabe = { enabled = false },
+              pyflakes = { enabled = false },
+              pycodestyle = { enabled = false },
+              -- auto-completion options
+              jedi_completion = { fuzzy = true },
+              -- import sorting
+              isort = { enabled = true },
+              -- refactor
+              rope_autoimport = { enables = false },
+            }
+          }
+        }
+      })
 
+      -- auto-format on save
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -40,6 +70,8 @@ return {
           end
         end,
       })
+
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition)
     end,
   },
 }
