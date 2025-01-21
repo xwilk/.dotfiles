@@ -15,6 +15,7 @@ return {
           },
         },
       },
+      { 'jose-elias-alvarez/null-ls.nvim' },
     },
     config = function()
       require("mason").setup()
@@ -26,6 +27,7 @@ return {
       local lspconfig = require("lspconfig")
       lspconfig.lua_ls.setup({ capabilities = capabilities })
       lspconfig.pylsp.setup({
+        capabilities = capabilities,
         settings = {
           pylsp = {
             plugins = {
@@ -53,25 +55,62 @@ return {
       })
 
       -- auto-format on save
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client then return end
+      function format_on_save(buf, client)
+        if client.supports_method('textDocument/formatting') then
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            group = fmt_group,
+            buffer = buf,
+            callback = function()
+              vim.lsp.buf.format({
+                timeout_ms = 3000,
+                bufnr = buf,
+              })
+            end
+          })
+        end
+      end
 
-          ---@diagnostic disable-next-line: missing-parameter
-          if client.supports_method('textDocument/formatting') then
-            -- Format the current buffer on save
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format({ bufrn = args.buf, id = client.id })
-              end,
-            })
-          end
-        end,
-      })
+      -- vim.api.nvim_create_autocmd('LspAttach', {
+      --   callback = function(args)
+      --     local client = vim.lsp.get_client_by_id(args.data.client_id)
+      --     if not client then return end
+      --     format_on_save(args.buf, client)
+      --   end,
+      -- })
 
       vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+
+      -- Configuring null-ls
+      local nls = require('null-ls')
+      local fmt = nls.builtins.formatting
+      local dgn = nls.builtins.diagnostics
+
+      nls.setup({
+        sources = {
+          -- # FORMATTING #
+          fmt.trim_whitespace.with({
+            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux', 'py', 'go', 'ts', 'tsx' },
+          }),
+          fmt.black,
+          fmt.isort,
+          fmt.gofmt,
+          fmt.rustfmt,
+          fmt.stylua,
+          fmt.shfmt.with({
+            extra_args = { '-i', 4, '-ci', '-sr' },
+          }),
+          -- # DIAGNOSTICS #
+          dgn.pylint,
+          dgn.mypy,
+          dgn.shellcheck,
+          dgn.luacheck.with({
+            extra_args = { '--globals', 'vim', '--std', 'luajit' },
+          }),
+        },
+        on_attach = function(client, bufnr)
+          format_on_save(bufnr, client)
+        end,
+      })
     end,
   },
 }

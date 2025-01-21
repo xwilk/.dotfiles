@@ -12,11 +12,11 @@ font:
     style: Italic
 
   bold_italic:
-    family: JetBrainsMone Nerd Font Mono
+    family: JetBrainsMono Nerd Font Mono
     style: Bold Italic
 
   size: 17
 
 import:
- - ~/.config/alacritty/themes/themes/kanagawa.yaml
+ - ~/.config/alacritty/themes/themes/kanagawa_wave.yaml
 

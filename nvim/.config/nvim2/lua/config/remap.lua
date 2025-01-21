@@ -34,7 +34,7 @@ vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 vim.keymap.set("n", "<leader>q", "<cmd>copen<CR>")
 vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
 
--- copy path to clipboard
+-- copy file path to clipboard
 vim.keymap.set("n", "<leader>cfp", ":let @+ = expand('%:p')<CR>")
 vim.keymap.set("n", "<leader>cp", ":let @+ = expand('%')<CR>")
 
