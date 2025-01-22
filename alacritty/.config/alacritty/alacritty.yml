@@ -20,3 +20,5 @@ font:
 import:
  - ~/.config/alacritty/themes/themes/kanagawa_wave.yaml
 
+window:
+  option_as_alt: "Both"

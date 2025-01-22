@@ -11,7 +11,15 @@ return {
         pickers = {
           find_files = {
             theme = "ivy"
+          },
+          lsp_definitions = {
+            theme = "ivy"
+          },
+          lsp_references = {
+            theme = "ivy"
           }
+          -- vim.keymap.set("n", "gd", builtin.lsp_definitions, { buffer = 0 })
+          -- vim.keymap.set("n", "gr", builtin.lsp_references, { buffer = 0 })
         },
         extensions = {
           fzf = {}
@@ -28,7 +36,8 @@ return {
       -- edit nvim files
       vim.keymap.set("n", "<space>en", function()
         builtin.find_files {
-          cwd = vim.fn.stdpath("config")
+          cwd = vim.fn.stdpath("config"),
+          follow = true,
         }
       end)
 

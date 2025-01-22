@@ -15,7 +15,7 @@ return {
           },
         },
       },
-      { 'jose-elias-alvarez/null-ls.nvim' },
+      { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
     },
     config = function()
       require("mason").setup()
@@ -38,7 +38,7 @@ return {
               yapf = { enabled = false },
               -- linter options
               pylint = { enabled = true },
-              mypy = { enabled = true },
+              mypy = { enabled = true }, -- run :PylspInstall pylsp-mypy
               ruff = { enabled = false },
               mccabe = { enabled = false },
               pyflakes = { enabled = false },
@@ -46,7 +46,7 @@ return {
               -- auto-completion options
               jedi_completion = { fuzzy = true },
               -- import sorting
-              isort = { enabled = true },
+              isort = { enabled = true }, -- run :PylspInstall pylsp-isort
               -- refactor
               rope_autoimport = { enables = false },
             }
@@ -55,10 +55,9 @@ return {
       })
 
       -- auto-format on save
-      function format_on_save(buf, client)
+      local function format_on_save(buf, client)
         if client.supports_method('textDocument/formatting') then
           vim.api.nvim_create_autocmd('BufWritePre', {
-            group = fmt_group,
             buffer = buf,
             callback = function()
               vim.lsp.buf.format({
@@ -70,47 +69,41 @@ return {
         end
       end
 
-      -- vim.api.nvim_create_autocmd('LspAttach', {
-      --   callback = function(args)
-      --     local client = vim.lsp.get_client_by_id(args.data.client_id)
-      --     if not client then return end
-      --     format_on_save(args.buf, client)
-      --   end,
-      -- })
-
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-
-      -- Configuring null-ls
-      local nls = require('null-ls')
-      local fmt = nls.builtins.formatting
-      local dgn = nls.builtins.diagnostics
-
-      nls.setup({
-        sources = {
-          -- # FORMATTING #
-          fmt.trim_whitespace.with({
-            filetypes = { 'text', 'sh', 'zsh', 'toml', 'make', 'conf', 'tmux', 'py', 'go', 'ts', 'tsx' },
-          }),
-          fmt.black,
-          fmt.isort,
-          fmt.gofmt,
-          fmt.rustfmt,
-          fmt.stylua,
-          fmt.shfmt.with({
-            extra_args = { '-i', 4, '-ci', '-sr' },
-          }),
-          -- # DIAGNOSTICS #
-          dgn.pylint,
-          dgn.mypy,
-          dgn.shellcheck,
-          dgn.luacheck.with({
-            extra_args = { '--globals', 'vim', '--std', 'luajit' },
-          }),
-        },
-        on_attach = function(client, bufnr)
-          format_on_save(bufnr, client)
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if not client then return end
+          format_on_save(args.buf, client)
         end,
       })
+
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          local builtin = require "telescope.builtin"
+          vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
+          vim.keymap.set("n", "gd", builtin.lsp_definitions, { buffer = 0 })
+          vim.keymap.set("n", "gr", builtin.lsp_references, { buffer = 0 })
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = 0 })
+          vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { buffer = 0 })
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
+
+          vim.keymap.set("n", "<space>cr", vim.lsp.buf.rename, { buffer = 0 })
+          vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { buffer = 0 })
+          vim.keymap.set("n", "<space>wd", builtin.lsp_document_symbols, { buffer = 0 })
+        end,
+      })
+
+      -- diagnostic lines
+      require("lsp_lines").setup()
+      vim.diagnostic.config { virtual_text = true, virtual_lines = false }
+      vim.keymap.set("", "<leader>l", function()
+        local config = vim.diagnostic.config() or {}
+        if config.virtual_text then
+          vim.diagnostic.config { virtual_text = false, virtual_lines = true }
+        else
+          vim.diagnostic.config { virtual_text = true, virtual_lines = false }
+        end
+      end, { desc = "Toggle lsp_lines" })
     end,
   },
 }
