@@ -78,7 +78,7 @@ return {
       })
 
       vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
+        callback = function(_)
           local builtin = require "telescope.builtin"
           vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
           vim.keymap.set("n", "gd", builtin.lsp_definitions, { buffer = 0 })

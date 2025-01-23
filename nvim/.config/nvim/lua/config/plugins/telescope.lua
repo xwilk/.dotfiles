@@ -30,8 +30,10 @@ return {
 
       local builtin = require('telescope.builtin')
       vim.keymap.set("n", "<C-p>", builtin.git_files)
+      vim.keymap.set("n", "<space>ff", builtin.find_files)
+      vim.keymap.set("n", "<space>fg", require "config.telescope.multigrep")
       vim.keymap.set("n", "<space>fh", builtin.help_tags)
-      vim.keymap.set("n", "<space>fd", builtin.find_files)
+      vim.keymap.set("n", "<space>fb", builtin.buffers)
 
       -- edit nvim files
       vim.keymap.set("n", "<space>en", function()
@@ -47,8 +49,6 @@ return {
           cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
         }
       end)
-
-      require "config.telescope.multigrep".setup()
     end
   }
 }
