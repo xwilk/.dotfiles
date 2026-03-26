@@ -13,13 +13,20 @@ fi
 selected_name=$(basename "$selected" | tr . _)
 tmux_running=$(pgrep tmux)
 
-if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
-    exit 0
-fi
+create_windows() {
+    tmux new-session -d -s "$selected_name" -c "$selected" -n "AI  " "opencode; exec \$SHELL"
+    tmux new-window -t "$selected_name" -n nvim -c "$selected" -n "nvim " "nvim; exec \$SHELL"
+}
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -s $selected_name -c $selected -d
-fi
+if [[ -z $TMUX ]]; then
+    if ! tmux has-session -t=$selected_name 2> /dev/null; then
+        create_windows
+    fi
+    tmux attach-session -t "$selected_name"
+else
+    if ! tmux has-session -t=$selected_name 2> /dev/null; then
+        create_windows
+    fi
 
-tmux switch-client -t $selected_name
+    tmux switch-client -t "$selected_name"
+fi

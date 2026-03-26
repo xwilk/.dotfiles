@@ -2,84 +2,105 @@ return {
   {
     "neovim/nvim-lspconfig",
     dependencies = {
-      { "williamboman/mason.nvim" },
-      { "williamboman/mason-lspconfig.nvim" },
+      -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+      -- used for completion, annotations and signatures of Neovim apis
       {
         "folke/lazydev.nvim",
-        ft = "lua", -- onlu load on lua files
+        ft = "lua",
         opts = {
           library = {
-            -- See the configuration section for more details
             -- Load luvit types when the `vim.uv` word is found
-            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            { path = "luvit-meta/library", words = { "vim%.uv" } },
+            { path = "/usr/share/awesome/lib/", words = { "awesome" } },
           },
         },
       },
+      -- LSP install
+      { "mason-org/mason.nvim" },
+      { "mason-org/mason-lspconfig.nvim" },
+      { "WhoIsSethDaniel/mason-tool-installer.nvim" },
+      -- Errors
       { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+      -- Formatting
+      "stevearc/conform.nvim",
     },
     config = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup({
-        automatic_installation = true,
-      })
-
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require("lspconfig")
-      lspconfig.lua_ls.setup({ capabilities = capabilities })
-      lspconfig.pylsp.setup({
-        capabilities = capabilities,
-        settings = {
-          pylsp = {
-            plugins = {
-              -- formatter options
-              black = { enabled = false },
-              autopep8 = { enabled = false },
-              flake8 = { enabled = false },
-              yapf = { enabled = false },
-              -- linter options
-              pylint = { enabled = true },
-              mypy = { enabled = true }, -- run :PylspInstall pylsp-mypy
-              ruff = { enabled = false },
-              mccabe = { enabled = false },
-              pyflakes = { enabled = false },
-              pycodestyle = { enabled = false },
-              -- auto-completion options
-              jedi_completion = { fuzzy = true },
-              -- import sorting
-              isort = { enabled = true }, -- run :PylspInstall pylsp-isort
-              -- refactor
-              rope_autoimport = { enables = false },
-            }
-          }
-        }
-      })
-
-      -- auto-format on save
-      local function format_on_save(buf, client)
-        if client.supports_method('textDocument/formatting') then
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            buffer = buf,
-            callback = function()
-              vim.lsp.buf.format({
-                timeout_ms = 3000,
-                bufnr = buf,
-              })
-            end
-          })
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local servers = {
+        bashls = true,
+        gopls = {
+          manual_install = true,
+          settings = {
+            gopls = {
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+            },
+          },
+        },
+        lua_ls = {
+          cmd = { "lua-language-server" },
+        },
+        -- pyright = {
+        --   settings = {
+        --     pyright = {
+        --       -- Using Ruff's import organizer
+        --       disableOrganizeImports = true,
+        --     },
+        --     python = {
+        --       analysis = {
+        --         -- Ignore all files for analysis to exclusively use Ruff for linting
+        --         ignore = { "*" },
+        --       },
+        --     },
+        --   },
+        -- },
+        ruff = true,
+        ty = true,
+      }
+      local servers_to_install = vim.tbl_filter(function(key)
+        local t = servers[key]
+        if type(t) == "table" then
+          return not t.manual_install
+        else
+          return t
         end
+      end, vim.tbl_keys(servers))
+
+      local ensure_installed = {
+        "stylua",
+        "lua_ls",
+        "isort",
+      }
+      vim.list_extend(ensure_installed, servers_to_install)
+      require("mason").setup()
+      require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+      vim.lsp.config("*", { capabilities = capabilities })
+
+      for name, config in pairs(servers) do
+        if config == true then
+          config = {}
+        end
+        -- Only call vim.lsp.config if there are server-specific settings
+        if next(config) ~= nil then
+          -- Remove manual_install flag as it's not an LSP config field
+          local lsp_config = vim.tbl_deep_extend("force", {}, config)
+          lsp_config.manual_install = nil
+          vim.lsp.config(name, lsp_config)
+        end
+
+        vim.lsp.enable(name)
       end
 
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client then return end
-          format_on_save(args.buf, client)
-        end,
-      })
-
-      vim.api.nvim_create_autocmd('LspAttach', {
+      vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(_)
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
           vim.keymap.set("n", "gd", builtin.lsp_definitions, { buffer = 0 })
           vim.keymap.set("n", "gr", builtin.lsp_references, { buffer = 0 })
@@ -95,15 +116,34 @@ return {
 
       -- diagnostic lines
       require("lsp_lines").setup()
-      vim.diagnostic.config { virtual_text = true, virtual_lines = false }
+      vim.diagnostic.config({ virtual_text = true, virtual_lines = false })
       vim.keymap.set("", "<leader>l", function()
         local config = vim.diagnostic.config() or {}
         if config.virtual_text then
-          vim.diagnostic.config { virtual_text = false, virtual_lines = true }
+          vim.diagnostic.config({ virtual_text = false, virtual_lines = true })
         else
-          vim.diagnostic.config { virtual_text = true, virtual_lines = false }
+          vim.diagnostic.config({ virtual_text = true, virtual_lines = false })
         end
       end, { desc = "Toggle lsp_lines" })
     end,
+  },
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    -- This will provide type hinting with LuaLS
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        go = { "goimports", "goftm" },
+        python = { "ruff", "isort", "ruff_format" },
+      },
+      format_on_save = {
+        lsp_format = "fallback",
+        timeout_ms = 500,
+      },
+    },
   },
 }
