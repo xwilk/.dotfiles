@@ -35,8 +35,8 @@ vim.keymap.set("n", "<leader>q", "<cmd>copen<CR>")
 vim.keymap.set("n", "<leader>Q", "<cmd>cclose<CR>")
 
 -- navigate buffers
-vim.keymap.set("n", "bn", ":bnext<CR>")
-vim.keymap.set("n", "bp", ":bprev<CR>")
+vim.keymap.set("n", "<leader>bn", ":bnext<CR>")
+vim.keymap.set("n", "<leader>bp", ":bprev<CR>")
 
 -- copy path to clipboard
 vim.keymap.set("n", "<leader>cfp", ":let @+ = expand('%:p')<CR>")

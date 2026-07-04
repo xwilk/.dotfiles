@@ -5,10 +5,26 @@ return {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     },
+    keys = {
+      { "<C-p>", "<cmd>Telescope git_files<cr>", desc = "Git Files" },
+      { "<space>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+      {
+        "<space>fg",
+        function()
+          require("config.telescope.multigrep")()
+        end,
+        desc = "Live Grep",
+      },
+      { "<space>fh", "<cmd>Telescope help_tags<cr>", desc = "Help Tags" },
+      { "<space>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+    },
     config = function()
       require("telescope").setup({
         pickers = {
           find_files = {
+            theme = "ivy",
+          },
+          git_files = {
             theme = "ivy",
           },
           lsp_definitions = {
@@ -28,11 +44,11 @@ return {
       require("telescope").load_extension("fzf")
 
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<C-p>", builtin.git_files)
-      vim.keymap.set("n", "<space>ff", builtin.find_files)
-      vim.keymap.set("n", "<space>fg", require("config.telescope.multigrep"))
-      vim.keymap.set("n", "<space>fh", builtin.help_tags)
-      vim.keymap.set("n", "<space>fb", builtin.buffers)
+      -- vim.keymap.set("n", "<C-p>", builtin.git_files)
+      -- vim.keymap.set("n", "<space>ff", builtin.find_files)
+      -- vim.keymap.set("n", "<space>fg", require("config.telescope.multigrep"))
+      -- vim.keymap.set("n", "<space>fh", builtin.help_tags)
+      -- vim.keymap.set("n", "<space>fb", builtin.buffers)
 
       -- edit nvim files
       vim.keymap.set("n", "<space>en", function()

@@ -138,7 +138,9 @@ return {
       formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports", "goftm" },
-        python = { "ruff", "isort", "ruff_format" },
+        -- python = { "ruff", "isort", "ruff_format" },
+        python = { "ruff", "isort" },
+        -- python = { "ruff" },
       },
       format_on_save = {
         lsp_format = "fallback",

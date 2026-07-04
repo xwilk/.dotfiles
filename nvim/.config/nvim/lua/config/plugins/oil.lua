@@ -23,6 +23,7 @@ return {
       },
       keymaps = {
         ["<C-h>"] = false,
+        ["<C-p>"] = false,
         ["<leader>d"] = {
           desc = "Toggle file detail view",
           callback = function()

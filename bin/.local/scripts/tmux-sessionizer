@@ -14,8 +14,8 @@ selected_name=$(basename "$selected" | tr . _)
 tmux_running=$(pgrep tmux)
 
 create_windows() {
-    tmux new-session -d -s "$selected_name" -c "$selected" -n "AI  " "opencode; exec \$SHELL"
-    tmux new-window -t "$selected_name" -n nvim -c "$selected" -n "nvim " "nvim; exec \$SHELL"
+    tmux new-session -d -s "$selected_name" -c "$selected" -n "nvim " "nvim; exec \$SHELL"
+    tmux new-window -t "$selected_name" -c "$selected" -n "cmd  "
 }
 
 if [[ -z $TMUX ]]; then

@@ -9,4 +9,4 @@ bindkey -s ^f "tmux-sessionizer\n"
 path+=("$HOME/.local/scripts/")
 export PATH
 
-keychain id_rsa && source ~/.keychain/`uname -n`-sh
+# keychain id_rsa && source ~/.keychain/`uname -n`-sh
