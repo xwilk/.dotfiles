@@ -18,8 +18,69 @@ vim.keymap.set("n", "<leader>Y", '"+Y')
 vim.keymap.set("n", "<leader>d", '"_d')
 vim.keymap.set("v", "<leader>d", '"_d')
 
--- open project in tmux session
-vim.keymap.set("n", "<C-f>", "<cmd>!tmux neww tmux-sessionizer<CR>", { silent = true })
+-- open project in herdr session
+local builtin = require("telescope.builtin")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+
+local function herdr_sessionizer()
+  local locations_file = vim.fn.expand("~/.tmux-sessionizer-locations")
+  local locations = vim.fn.readfile(locations_file)
+  local projects = {}
+
+  for _, location in ipairs(locations) do
+    location = vim.fn.expand(vim.fn.expandcmd(location))
+
+    for _, path in ipairs(vim.fn.glob(location .. "/*", false, true)) do
+      if vim.fn.isdirectory(path) == 1 then
+        table.insert(projects, vim.fn.fnamemodify(path, ":p"))
+      end
+    end
+  end
+
+  require("telescope.pickers")
+    .new({}, {
+      prompt_title = "Herdr projects",
+
+      finder = require("telescope.finders").new_table({
+        results = projects,
+      }),
+
+      sorter = require("telescope.config").values.generic_sorter({}),
+
+      attach_mappings = function(prompt_bufnr, map)
+        local function select_project()
+          local selection = action_state.get_selected_entry()
+
+          actions.close(prompt_bufnr)
+
+          if selection then
+            vim.fn.jobstart({
+              "herdr-sessionizer",
+              selection[1],
+            })
+          end
+        end
+
+        actions.select_default:replace(select_project)
+
+        return true
+      end,
+    })
+    :find()
+end
+
+vim.keymap.set("n", "<C-f>", herdr_sessionizer, {
+  desc = "Herdr project sessionizer",
+})
+
+-- vim.keymap.set("n", "<C-f>", "<cmd>!herdr workspace create herdr-sessionizer<CR>", { silent = true })
+-- vim.keymap.set("n", "<C-f>", "<cmd>!tmux-sessionizer<CR>", { silent = true })
+-- vim.keymap.set("n", "<C-f>", function()
+--   vim.fn.jobstart({ "herdr-sessionizer" }, {
+--     term = true,
+--   })
+-- end)
 
 -- source current file
 -- run current line

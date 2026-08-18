@@ -1,4 +1,5 @@
 $HOME
-$HOME/projects/personal
-$HOME/projects/work
-/mnt/e/Projects/Rust
+$HOME/Projects
+$HOME/Projects/Work
+$HOME/Projects/Private
+$HOME/.config

@@ -1,12 +1,41 @@
+# All the default Omarchy aliases and functions
+# (don't mess with these directly, just overwrite them here!)
+# source ~/.local/share/omarchy/default/bash/rc
+
+# Add your own exports, aliases, and functions here.
+#
+# Make an alias for invoking commands you use constantly
+# alias p='python'
+
+# . "$HOME/.local/share/../bin/env"
+
+# Custom
 export PYTHONDONTWRITEBYTECODE=1
 export XDG_CONFIG_HOME=$HOME/.config
 VIM="nvim"
 
+# LS
 alias ll="ls -la"
 
-bindkey -s ^f "tmux-sessionizer\n"
+# Directories
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# nvim
+alias n="nvim"
+
+bindkey -s ^f "herdr-sessionizer\n"
 
 path+=("$HOME/.local/scripts/")
 export PATH
 
+. "$HOME/.local/share/../bin/env"
 keychain id_rsa && source ~/.keychain/`uname -n`-sh
+
+# go
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+
+# odin
+export PATH="$PATH:/home/pwilk/Projects/Odin"

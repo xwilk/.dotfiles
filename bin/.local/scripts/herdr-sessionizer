@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(find $(cat ~/.tmux-sessionizer-locations | envsubst) -maxdepth 1 -mindepth 1 -type d | fzf)
+fi
+
+[[ -z "$selected" ]] && exit 0
+
+selected=$(realpath "$selected")
+selected_name=$(basename "$selected" | tr . _)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Find existing workspace by pane cwd
+# ─────────────────────────────────────────────────────────────────────────────
+
+find_workspace() {
+    local workspace_id
+    local pane_json
+    local cwd
+
+    while read -r workspace_id; do
+        [[ -z "$workspace_id" ]] && continue
+
+        pane_json=$(herdr pane list --workspace "$workspace_id" 2>/dev/null) || continue
+
+        while read -r cwd; do
+            [[ -z "$cwd" ]] && continue
+
+            if [[ "$(realpath "$cwd" 2>/dev/null || true)" == "$selected" ]]; then
+                printf '%s\n' "$workspace_id"
+                return 0
+            fi
+        done < <(
+            printf '%s\n' "$pane_json" |
+            jq -r '.result.panes[]?.cwd // empty'
+        )
+    done < <(
+        herdr workspace list |
+        jq -r '.result.workspaces[].workspace_id'
+    )
+
+    return 1
+}
+
+workspace_id=$(find_workspace || true)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Existing workspace
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [[ -n "$workspace_id" ]]; then
+    herdr workspace focus "$workspace_id" >/dev/null
+
+    # If we're outside Herdr, attach to it.
+    if [[ "${HERDR_ENV:-}" != "1" ]]; then
+        exec herdr
+    fi
+
+    exit 0
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Create workspace
+# ─────────────────────────────────────────────────────────────────────────────
+
+created=$(
+    herdr workspace create \
+        --cwd "$selected" \
+        --label "$selected_name" \
+        --no-focus
+)
+
+workspace_id=$(
+    printf '%s\n' "$created" |
+    jq -r '.result.workspace.workspace_id'
+)
+
+tab_id=$(
+    printf '%s\n' "$created" |
+    jq -r '.result.tab.tab_id'
+)
+
+root_pane_id=$(
+    printf '%s\n' "$created" |
+    jq -r '.result.root_pane.pane_id'
+)
+
+# Initial tab → nvim 
+herdr tab rename "$tab_id" "nvim" >/dev/null
+herdr pane run "$root_pane_id" "nvim" >/dev/null
+
+# Second tab → cmd
+herdr tab create \
+    --workspace "$workspace_id" \
+    --cwd "$selected" \
+    --label "cmd" \
+    --no-focus
+
+# Focus the newly-created workspace
+herdr workspace focus "$workspace_id" >/dev/null
+
+# Outside Herdr, attach to the client.
+if [[ "${HERDR_ENV:-}" != "1" ]]; then
+    exec herdr
+fi
